@@ -16,8 +16,8 @@
 #include <thread>
 using namespace std;
 
-std::mutex g_mutex;
-std::condition_variable g_cv;
+mutex g_mutex;
+condition_variable g_cv;
 RCSwitch mySwitch;
 
 int pin = 2;
@@ -25,7 +25,7 @@ bool g_ready = false;
 
 void received() {
 	while (true) {
-		std::unique_lock<std::mutex> ul(g_mutex);
+		unique_lock<mutex> ul(g_mutex);
 		g_cv.wait(ul, []() { return g_ready; });
 		int value = mySwitch.getReceivedValue();
         	if (value == 0) {
@@ -43,16 +43,16 @@ void received() {
 
 void receiving() {
 	while (true) {
-		std::unique_lock<std::mutex> ul(g_mutex);
+		unique_lock<mutex> ul(g_mutex);
 		if (mySwitch.available()) {
 			g_ready = true;
 			ul.unlock();
 			g_cv.notify_one();
 			ul.lock();
 		}
-		auto now = std::chrono::system_clock::now();
+		auto now = chrono::system_clock::now();
 		g_cv.wait(ul, []() { return g_ready == false; });
-		std::this_thread::sleep_for (std::chrono::milliseconds(100));
+		this_thread::sleep_for (chrono::milliseconds(100));
 	}
 }
 
@@ -75,8 +75,8 @@ int main(int argc, char *argv[]) {
 	mySwitch.enableReceive(pin);  // Receiver on interrupt 0 => that is pin #2
 
 	int times = 100;
-	std::thread t1(receivedThread, times);
-	std::thread t2(receivingThread, times);
+	thread t1(receivedThread, times);
+	thread t2(receivingThread, times);
 	t1.join();
 	t2.join();
 
