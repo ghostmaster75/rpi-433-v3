@@ -9,7 +9,7 @@ codesend: RCSwitch.o codesend.o
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $+ -o ../build/$@ -lwiringPi
 	
 RFSniffer: RCSwitch.o RFSniffer.o
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) $+ -o ../build/$@ -lwiringPi -lpthread -pthread
+  $(CXX) $(CXXFLAGS) $(LDFLAGS) $+ -o ../build/$@ -lwiringPi -lpthread
 
 clean:
 	$(RM) *.o send codesend RFSniffer
