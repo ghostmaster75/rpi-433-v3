@@ -50,7 +50,7 @@ void receiving() {
 			g_cv.notify_one();
 			ul.lock();
 		}
-		auto now = chrono::system_clock::now();
+
 		g_cv.wait(ul, []() { return g_ready == false; });
 		this_thread::sleep_for (chrono::milliseconds(100));
 	}
